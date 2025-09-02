@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.sa.accommodation_service.common.application.annotations.UseCase;
+import com.sa.accommodation_service.common.application.outputports.cloud.DeleteFile;
 import com.sa.accommodation_service.common.application.outputports.cloud.UploadImage;
 import com.sa.accommodation_service.common.infrastructure.exceptions.EntityNotFoundException;
 import com.sa.accommodation_service.hotel.application.dto.UpdateHotelDTO;
@@ -29,6 +30,7 @@ public class UpdateHotelImpl implements UpdateHotel {
     private final HotelFactory hotelFactory;
     private final SaveHotel saveHotel;
     private final UploadImage uploadImage;
+    private final DeleteFile deleteFile;
 
     @Override
     @Transactional
@@ -38,6 +40,9 @@ public class UpdateHotelImpl implements UpdateHotel {
         String fileName = null;
         if (updateHotelDTO.photo() != null) {
             fileName = uploadImage.upload(updateHotelDTO.photo());
+        }
+        if (fileName != null) {
+            deleteFile.delete(hotel.getPhoto());
         }
         return saveHotel.save(hotelFactory.updateFromDTO(updateHotelDTO, fileName, hotel));
     }
