@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.sa.accommodation_service.room.domain.Room;
 
-public record RoomResponse(
+public record ShortRoomResponse(
 
     UUID id,
     String roomNumber,
@@ -15,8 +15,8 @@ public record RoomResponse(
 
 ) {
 
-    public static RoomResponse fromDomain(Room room) {
-        return new RoomResponse(
+    public static ShortRoomResponse fromDomain(Room room) {
+        return new ShortRoomResponse(
                 room.getId().value(),
                 room.getRoomNumber().value(),
                 room.getPricePerNight().value(),

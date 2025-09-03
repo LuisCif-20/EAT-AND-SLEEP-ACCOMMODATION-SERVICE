@@ -3,13 +3,13 @@ package com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.HotelResponse;
+import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.ShortHotelResponse;
 import com.sa.accommodation_service.room.domain.Room;
 
 public record GetRoomByIdResponseDTO(
 
     UUID id,
-    HotelResponse hotel,
+    ShortHotelResponse hotel,
     String roomNumber,
     String description,
     BigDecimal pricePerNight,
@@ -23,7 +23,7 @@ public record GetRoomByIdResponseDTO(
     public static GetRoomByIdResponseDTO fromDomain(Room room) {
         return new GetRoomByIdResponseDTO(
                 room.getId().value(),
-                HotelResponse.fromDomain(room.getHotel()),
+                ShortHotelResponse.fromDomain(room.getHotel()),
                 room.getRoomNumber().value(),
                 room.getDescription(),
                 room.getPricePerNight().value(),

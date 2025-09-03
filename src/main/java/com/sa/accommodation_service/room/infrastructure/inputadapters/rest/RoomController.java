@@ -1,4 +1,4 @@
-package com.sa.accommodation_service.room.infrastructure.inputadapters.rest.controller;
+package com.sa.accommodation_service.room.infrastructure.inputadapters.rest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +13,7 @@ import com.sa.accommodation_service.room.domain.Room;
 import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.CreateRoomRequestDTO;
 import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.CreateRoomResponseDTO;
 import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.GetRoomByIdResponseDTO;
-import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.RoomResponse;
+import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.ShortRoomResponse;
 import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.RoomSearchRequestDTO;
 import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.UpdateRoomRequestDTO;
 import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.UpdateRoomResponseDTO;
@@ -65,10 +65,10 @@ public class RoomController {
     }
     
     @GetMapping
-    public ResponseEntity<List<RoomResponse>> getAll(RoomSearchRequestDTO roomSearchRequestDTO) {
-        final List<RoomResponse> rooms = getAllRooms.getAll(roomSearchRequestDTO.toRoomSearchDTO())
+    public ResponseEntity<List<ShortRoomResponse>> getAll(RoomSearchRequestDTO roomSearchRequestDTO) {
+        final List<ShortRoomResponse> rooms = getAllRooms.getAll(roomSearchRequestDTO.toRoomSearchDTO())
                 .stream()
-                .map(RoomResponse::fromDomain)
+                .map(ShortRoomResponse::fromDomain)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(rooms);
     }

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.sa.accommodation_service.hotel.domain.Hotel;
 
-public record HotelResponse(
+public record ShortHotelResponse(
 
     UUID id,
     String name,
@@ -14,8 +14,8 @@ public record HotelResponse(
 
 ) {
 
-    public static HotelResponse fromDomain(Hotel hotel) {
-        return new HotelResponse(hotel.getId().value(),
+    public static ShortHotelResponse fromDomain(Hotel hotel) {
+        return new ShortHotelResponse(hotel.getId().value(),
                 hotel.getName(),
                 hotel.getAddress(),
                 hotel.getCity(),

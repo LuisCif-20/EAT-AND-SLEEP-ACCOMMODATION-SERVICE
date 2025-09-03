@@ -1,4 +1,4 @@
-package com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.controller;
+package com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +13,7 @@ import com.sa.accommodation_service.hotel.domain.Hotel;
 import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.CreateHotelRequestDTO;
 import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.CreateHotelResponseDTO;
 import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.GetHotelByIdResponseDTO;
-import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.HotelResponse;
+import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.ShortHotelResponse;
 import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.HotelSearchRequestDTO;
 import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.UpdateHotelRequestDTO;
 import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.UpdateHotelResponseDTO;
@@ -65,10 +65,10 @@ public class HotelController {
     }
 
     @GetMapping
-    public ResponseEntity<List<HotelResponse>> getAll(HotelSearchRequestDTO hotelSearchRequestDTO) {
-        final List<HotelResponse> hotels = getAllHotels.getAll(hotelSearchRequestDTO.toHotelSearchDTO())
+    public ResponseEntity<List<ShortHotelResponse>> getAll(HotelSearchRequestDTO hotelSearchRequestDTO) {
+        final List<ShortHotelResponse> hotels = getAllHotels.getAll(hotelSearchRequestDTO.toHotelSearchDTO())
                 .stream()
-                .map(HotelResponse::fromDomain)
+                .map(ShortHotelResponse::fromDomain)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(hotels);
     }
