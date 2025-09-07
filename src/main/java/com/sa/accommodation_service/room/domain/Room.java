@@ -22,23 +22,23 @@ public class Room {
     private String description;
     private Money pricePerNight;
     private Money maintenanceCost;
-    private String photo;
     private boolean available;
     private boolean active;
+    private String photo;
 
     @Default
     public Room(UUID id, Hotel hotel, String roomNumber, String description,
             BigDecimal pricePerNight, BigDecimal maintenanceCost, 
-            String photo, boolean available, boolean active) {
+            boolean available, boolean active, String photo) {
         this.id = new Id(id);
         this.hotel = hotel;
         this.roomNumber = new RoomNumber(roomNumber);
         this.description = description;
         this.pricePerNight = new Money(pricePerNight);
         this.maintenanceCost = new Money(maintenanceCost);
-        this.photo = photo;
         this.available = available;
         this.active = active;
+        this.photo = photo;
     }
 
     public Room(Hotel hotel, String roomNumber, String description,
@@ -49,9 +49,9 @@ public class Room {
         this.description = description;
         this.pricePerNight = new Money(pricePerNight);
         this.maintenanceCost = new Money(maintenanceCost);
-        this.photo = photo;
         this.available = true;
         this.active = true;
+        this.photo = photo;
     }
 
     public void markAsAvailable() {

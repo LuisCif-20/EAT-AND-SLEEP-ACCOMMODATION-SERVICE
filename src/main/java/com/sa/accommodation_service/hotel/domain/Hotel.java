@@ -18,18 +18,19 @@ public class Hotel {
     private String address;
     private String city;
     private PhoneNumber phoneNumber;
-    private String photo;
     private boolean active;
+    private String photo;
 
     @Default
-    public Hotel(UUID id, String name, String address, String city, String phoneNumber, String photo, boolean active) {
+    public Hotel(UUID id, String name, String address, String city,
+            String phoneNumber, boolean active, String photo) {
         this.id = new Id(id);
         this.name = name;
         this.address = address;
         this.city = city;
         this.phoneNumber = new PhoneNumber(phoneNumber);
-        this.photo = photo;
         this.active = active; 
+        this.photo = photo;
     }
 
     public Hotel(String name, String address, String city, String phoneNumber, String photo) {
@@ -38,8 +39,8 @@ public class Hotel {
         this.address = address;
         this.city = city;
         this.phoneNumber = new PhoneNumber(phoneNumber);
-        this.photo = photo;
         this.active = true;
+        this.photo = photo;
     }
 
 }

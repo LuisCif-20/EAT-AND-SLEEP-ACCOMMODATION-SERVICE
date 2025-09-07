@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.sa.accommodation_service.common.application.annotations.UseCase;
+import com.sa.accommodation_service.common.application.outputports.cloud.DeleteFile;
 import com.sa.accommodation_service.common.application.outputports.cloud.UploadFile;
 import com.sa.accommodation_service.hotel.application.inputports.createhotel.CreateHotel;
 import com.sa.accommodation_service.hotel.application.inputports.createhotel.dto.CreateHotelDTO;
@@ -22,18 +23,24 @@ public class CreateHotelImpl implements CreateHotel {
 
     private final SaveHotel saveHotel;
     private final UploadFile uploadFile;
+    private final DeleteFile deleteFile;
 
     @Override
     @Transactional
     public Hotel create(@Valid CreateHotelDTO createHotelDTO) {
         uploadFile.upload(createHotelDTO.photo());
-        final Hotel hotel = new Hotel(
-                createHotelDTO.name(),
-                createHotelDTO.address(),
-                createHotelDTO.city(),
-                createHotelDTO.phoneNumber(),
-                createHotelDTO.photo().fileName());
-        return saveHotel.save(hotel);
+        try {
+            final Hotel hotel = new Hotel(
+                    createHotelDTO.name(),
+                    createHotelDTO.address(),
+                    createHotelDTO.city(),
+                    createHotelDTO.phoneNumber(),
+                    createHotelDTO.photo().fileName());
+            return saveHotel.save(hotel);
+        } catch (RuntimeException e) {
+            deleteFile.delete(createHotelDTO.photo().fileName());
+            throw e;
+        }
     }
-    
+
 }

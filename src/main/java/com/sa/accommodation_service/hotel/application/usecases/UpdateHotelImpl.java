@@ -1,6 +1,5 @@
 package com.sa.accommodation_service.hotel.application.usecases;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -37,28 +36,39 @@ public class UpdateHotelImpl implements UpdateHotel {
     public Hotel update(UUID id, @Valid UpdateHotelDTO updateHotelDTO) {
         final Hotel hotel = findHotelById.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No existe un hotel con el id: " + id));
-        if (updateHotelDTO.photo() != null) {
-            uploadImage.upload(updateHotelDTO.photo());
+        String photo = null;
+        try {
+            photo = resolvePhoto(updateHotelDTO.photo(), hotel.getPhoto());
+            Hotel updatedHotel = getUpdatedHotel(updateHotelDTO, photo, hotel);
+            updatedHotel = saveHotel.save(updatedHotel);
             deleteFile.delete(hotel.getPhoto());
+            return updatedHotel;
+        } catch (RuntimeException e) {
+            if (photo != null && !photo.equals(hotel.getPhoto())) {
+                deleteFile.delete(photo);
+            }
+            throw e;
         }
-        final Hotel updatedHotel = updateHotel(updateHotelDTO, hotel);
-        return saveHotel.save(updatedHotel);
     }
 
-    private Hotel updateHotel(UpdateHotelDTO updateHotelDTO, Hotel hotel) {
+    private Hotel getUpdatedHotel(UpdateHotelDTO updateHotelDTO, String photo, Hotel hotel) {
         return new Hotel(
                 hotel.getId().value(),
-                updateValueIfNotNull(updateHotelDTO.name(), hotel.getName()),
-                updateValueIfNotNull(updateHotelDTO.address(), hotel.getAddress()),
-                updateValueIfNotNull(updateHotelDTO.city(), hotel.getCity()),
-                updateValueIfNotNull(updateHotelDTO.phoneNumber(), hotel.getPhoneNumber().value()),
-                Optional.ofNullable(updateHotelDTO.photo())
-                        .map(FileDataDTO::fileName)
-                        .orElse(hotel.getPhoto()),
-                updateValueIfNotNull(updateHotelDTO.active(), hotel.isActive()));
+                resolveValue(updateHotelDTO.name(), hotel.getName()),
+                resolveValue(updateHotelDTO.address(), hotel.getAddress()),
+                resolveValue(updateHotelDTO.city(), hotel.getCity()),
+                resolveValue(updateHotelDTO.phoneNumber(), hotel.getPhoneNumber().value()),
+                resolveValue(updateHotelDTO.active(), hotel.isActive()),
+                photo);
     }
 
-    private <T> T updateValueIfNotNull(T newValue, T currentValue) {
+    private String resolvePhoto(FileDataDTO newPhoto, String currentPhoto) {
+        if (newPhoto == null) return currentPhoto;
+        uploadImage.upload(newPhoto);
+        return newPhoto.fileName();
+    }
+
+    private <T> T resolveValue(T newValue, T currentValue) {
 		return newValue == null ? currentValue : newValue;
 	}
     

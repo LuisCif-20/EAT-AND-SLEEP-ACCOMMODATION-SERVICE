@@ -11,6 +11,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.google.cloud.storage.StorageException;
 import com.sa.accommodation_service.common.domain.exceptions.ValueObjectValidationException;
+import com.sa.accommodation_service.common.infrastructure.exceptions.EntityAlreadyExistsException;
 import com.sa.accommodation_service.common.infrastructure.exceptions.EntityNotFoundException;
 import com.sa.accommodation_service.common.infrastructure.exceptions.FileValidatorException;
 import com.sa.accommodation_service.common.infrastructure.inputadapters.rest.utils.ConstraintViolationUtils;
@@ -38,14 +39,14 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    // @ExceptionHandler(EntityAlreadyExistsException.class)
-    // public ProblemDetail handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
-    //     final ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
-    //     problemDetail.setTitle("Entity Already Exists");
-    //     problemDetail.setProperty("error_category", "Generic");
-    //     problemDetail.setProperty("timestamp", Instant.now());
-    //     return problemDetail;
-    // }
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public ProblemDetail handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
+        final ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        problemDetail.setTitle("Entity Already Exists");
+        problemDetail.setProperty("error_category", "Generic");
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
 
     // @ExceptionHandler(MissingRequestHeaderException.class)
     // public ProblemDetail handleMissingRequestHeaderException(MissingRequestHeaderException e) {

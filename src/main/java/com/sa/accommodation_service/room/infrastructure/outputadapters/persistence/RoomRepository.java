@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sa.accommodation_service.common.infrastructure.annotations.OutputAdapter;
 import com.sa.accommodation_service.room.application.inputports.getallrooms.dto.RoomSearchDTO;
+import com.sa.accommodation_service.room.application.ouputports.persistence.ExistsRoomByHotelIdAndRoomNumber;
+import com.sa.accommodation_service.room.application.ouputports.persistence.ExistsRoomByHotelIdAndRoomNumberAndIdNot;
 import com.sa.accommodation_service.room.application.ouputports.persistence.FindAllRooms;
 import com.sa.accommodation_service.room.application.ouputports.persistence.FindRoomById;
 import com.sa.accommodation_service.room.application.ouputports.persistence.SaveRoom;
@@ -25,11 +27,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 @OutputAdapter
-public class RoomRepository implements SaveRoom, FindRoomById, FindAllRooms {
-    
+public class RoomRepository implements SaveRoom, FindRoomById, FindAllRooms,
+        ExistsRoomByHotelIdAndRoomNumber, ExistsRoomByHotelIdAndRoomNumberAndIdNot {
+
     private final RoomPersistenceMapper roomPersistenceMapper;
     private final RoomEntityRepository roomEntityRepository;
-    
+
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public Room save(Room room) {
@@ -54,6 +57,18 @@ public class RoomRepository implements SaveRoom, FindRoomById, FindAllRooms {
                 .stream()
                 .map(roomPersistenceMapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByHotelIdAndRoomNumber(UUID hotelId, String number) {
+        return roomEntityRepository.existsByHotelIdAndRoomNumber(hotelId, number);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByHotelIdAndRoomNumberAndIdNot(UUID hotelId, String roomNumber, UUID id) {
+        return roomEntityRepository.existsByHotelIdAndRoomNumberAndIdNot(hotelId, roomNumber, id);
     }
 
 }
