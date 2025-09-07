@@ -18,6 +18,6 @@ CREATE TABLE room (
     photo VARCHAR NOT NULL,
     available BOOLEAN NOT NULL,
     active BOOLEAN NOT NULL,
-    UNIQUE (room_number,hotel_id)
+    UNIQUE (room_number,hotel_id),
     FOREIGN KEY (hotel_id) REFERENCES hotel(id)
 );
