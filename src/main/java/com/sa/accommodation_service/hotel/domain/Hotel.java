@@ -33,17 +33,13 @@ public class Hotel {
     }
 
     public Hotel(String name, String address, String city, String phoneNumber, String photo) {
-        this.id = new Id(UUID.randomUUID());
+        this.id = Id.generate();
         this.name = name;
         this.address = address;
         this.city = city;
         this.phoneNumber = new PhoneNumber(phoneNumber);
         this.photo = photo;
         this.active = true;
-    }
-
-    public void toggleActive() {
-        this.active = !this.active;
     }
 
 }

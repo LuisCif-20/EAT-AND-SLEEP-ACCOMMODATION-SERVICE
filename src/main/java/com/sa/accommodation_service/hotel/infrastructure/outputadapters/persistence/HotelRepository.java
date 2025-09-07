@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sa.accommodation_service.common.infrastructure.annotations.OutputAdapter;
-import com.sa.accommodation_service.hotel.application.dto.HotelSearchDTO;
+import com.sa.accommodation_service.hotel.application.inputports.getallhotels.dto.HotelSearchDTO;
 import com.sa.accommodation_service.hotel.application.outputports.persistence.FindAllHotels;
 import com.sa.accommodation_service.hotel.application.outputports.persistence.FindHotelById;
 import com.sa.accommodation_service.hotel.application.outputports.persistence.SaveHotel;

@@ -1,6 +1,6 @@
 package com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto;
 
-import com.sa.accommodation_service.hotel.application.dto.HotelSearchDTO;
+import com.sa.accommodation_service.hotel.application.inputports.getallhotels.dto.HotelSearchDTO;
 
 public record HotelSearchRequestDTO(
 

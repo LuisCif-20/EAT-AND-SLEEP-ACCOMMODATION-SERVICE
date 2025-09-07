@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sa.accommodation_service.common.application.annotations.UseCase;
 import com.sa.accommodation_service.common.infrastructure.exceptions.EntityNotFoundException;
-import com.sa.accommodation_service.room.application.inputports.GetRoomById;
+import com.sa.accommodation_service.room.application.inputports.getroombyid.GetRoomById;
 import com.sa.accommodation_service.room.application.ouputports.persistence.FindRoomById;
 import com.sa.accommodation_service.room.domain.Room;
 

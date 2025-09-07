@@ -12,8 +12,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.google.cloud.storage.StorageException;
 import com.sa.accommodation_service.common.domain.exceptions.ValueObjectValidationException;
 import com.sa.accommodation_service.common.infrastructure.exceptions.EntityNotFoundException;
-import com.sa.accommodation_service.common.infrastructure.exceptions.FileUploadException;
-import com.sa.accommodation_service.common.infrastructure.inputadapters.rest.utils.ConstraintViolationUtil;
+import com.sa.accommodation_service.common.infrastructure.exceptions.FileValidatorException;
+import com.sa.accommodation_service.common.infrastructure.inputadapters.rest.utils.ConstraintViolationUtils;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -108,8 +108,8 @@ public class GlobalExceptionHandler {
     //     return problemDetail;
     // }
 
-    @ExceptionHandler(FileUploadException.class)
-    public ProblemDetail handleFileUploadException(FileUploadException e) {
+    @ExceptionHandler(FileValidatorException.class)
+    public ProblemDetail handleFileUploadException(FileValidatorException e) {
         final ProblemDetail problemDetail = ProblemDetail
                 .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         problemDetail.setTitle("File Upload Error");
@@ -130,7 +130,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ProblemDetail handleConstraintViolationException(ConstraintViolationException e) {
-        final Map<String, String> errors = ConstraintViolationUtil
+        final Map<String, String> errors = ConstraintViolationUtils
                 .extractErrors(e.getConstraintViolations());
         final ProblemDetail problemDetail = ProblemDetail
                 .forStatusAndDetail(HttpStatus.BAD_REQUEST, "Se ha producido uno o mas errores de validacion");

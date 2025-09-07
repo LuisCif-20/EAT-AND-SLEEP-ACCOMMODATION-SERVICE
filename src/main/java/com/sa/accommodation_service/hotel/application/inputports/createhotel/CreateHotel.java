@@ -1,0 +1,14 @@
+package com.sa.accommodation_service.hotel.application.inputports.createhotel;
+
+import com.sa.accommodation_service.common.application.annotations.InputPort;
+import com.sa.accommodation_service.hotel.application.inputports.createhotel.dto.CreateHotelDTO;
+import com.sa.accommodation_service.hotel.domain.Hotel;
+
+import jakarta.validation.Valid;
+
+@InputPort
+public interface CreateHotel {
+    
+    public Hotel create(@Valid CreateHotelDTO createHotelDTO);
+
+}

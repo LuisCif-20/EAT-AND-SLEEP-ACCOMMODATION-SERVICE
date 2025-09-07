@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.sa.accommodation_service.common.application.annotations.UseCase;
-import com.sa.accommodation_service.room.application.dto.RoomSearchDTO;
-import com.sa.accommodation_service.room.application.inputports.GetAllRooms;
+import com.sa.accommodation_service.room.application.inputports.getallrooms.GetAllRooms;
+import com.sa.accommodation_service.room.application.inputports.getallrooms.dto.RoomSearchDTO;
 import com.sa.accommodation_service.room.application.ouputports.persistence.FindAllRooms;
 import com.sa.accommodation_service.room.domain.Room;
 

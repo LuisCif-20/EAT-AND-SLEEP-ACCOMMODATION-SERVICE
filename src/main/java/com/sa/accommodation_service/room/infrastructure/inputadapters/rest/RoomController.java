@@ -4,11 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sa.accommodation_service.common.infrastructure.annotations.InputAdapter;
-import com.sa.accommodation_service.room.application.inputports.CreateRoom;
-import com.sa.accommodation_service.room.application.inputports.GetAllRooms;
-import com.sa.accommodation_service.room.application.inputports.GetRoomById;
-import com.sa.accommodation_service.room.application.inputports.RoomActivation;
-import com.sa.accommodation_service.room.application.inputports.UpdateRoom;
+import com.sa.accommodation_service.room.application.inputports.createroom.CreateRoom;
+import com.sa.accommodation_service.room.application.inputports.getallrooms.GetAllRooms;
+import com.sa.accommodation_service.room.application.inputports.getroombyid.GetRoomById;
+import com.sa.accommodation_service.room.application.inputports.updateroom.UpdateRoom;
 import com.sa.accommodation_service.room.domain.Room;
 import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.CreateRoomRequestDTO;
 import com.sa.accommodation_service.room.infrastructure.inputadapters.rest.dto.CreateRoomResponseDTO;
@@ -41,7 +40,22 @@ public class RoomController {
     private final UpdateRoom updateRoom;
     private final GetRoomById getRoomById;
     private final GetAllRooms getAllRooms;
-    private final RoomActivation roomActivation;
+
+    @GetMapping
+    public ResponseEntity<List<ShortRoomResponse>> getAll(RoomSearchRequestDTO roomSearchRequestDTO) {
+        final List<ShortRoomResponse> rooms = getAllRooms
+                .getAll(roomSearchRequestDTO.toRoomSearchDTO())
+                .stream()
+                .map(ShortRoomResponse::fromDomain)
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(rooms);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GetRoomByIdResponseDTO> getById(@PathVariable UUID id) {
+        final Room room = getRoomById.getById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(GetRoomByIdResponseDTO.fromDomain(room));
+    }
 
     @PostMapping
     public ResponseEntity<CreateRoomResponseDTO> create(
@@ -58,25 +72,4 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(UpdateRoomResponseDTO.fromDomain(room));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GetRoomByIdResponseDTO> getById(@PathVariable UUID id) {
-        final Room room = getRoomById.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(GetRoomByIdResponseDTO.fromDomain(room));
-    }
-    
-    @GetMapping
-    public ResponseEntity<List<ShortRoomResponse>> getAll(RoomSearchRequestDTO roomSearchRequestDTO) {
-        final List<ShortRoomResponse> rooms = getAllRooms.getAll(roomSearchRequestDTO.toRoomSearchDTO())
-                .stream()
-                .map(ShortRoomResponse::fromDomain)
-                .toList();
-        return ResponseEntity.status(HttpStatus.OK).body(rooms);
-    }
-
-    @PatchMapping("/activation/{id}")
-    public ResponseEntity<Void> toggle(@PathVariable UUID id) {
-        roomActivation.toggle(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-    
 }

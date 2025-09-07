@@ -13,5 +13,9 @@ public record Id(UUID value) {
             throw new ValueObjectValidationException("El id no puede ser nulo");
         }
     }
+
+    public static Id generate() {
+        return new Id(UUID.randomUUID());
+    }
     
 }

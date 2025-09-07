@@ -43,7 +43,7 @@ public class Room {
 
     public Room(Hotel hotel, String roomNumber, String description,
             BigDecimal pricePerNight, BigDecimal maintenanceCost, String photo) {
-        this.id = new Id(UUID.randomUUID());
+        this.id = Id.generate();
         this.hotel = hotel;
         this.roomNumber = new RoomNumber(roomNumber);
         this.description = description;
@@ -54,12 +54,12 @@ public class Room {
         this.active = true;
     }
 
-    public void toggleAvailable() {
-        this.available = !this.available;
+    public void markAsAvailable() {
+        this.available = true;
     }
 
-    public void toggleActive() {
-        this.active = !this.active;
+    public void markAsOccupied() {
+        this.available = false;
     }
-    
+
 }

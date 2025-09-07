@@ -4,11 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sa.accommodation_service.common.infrastructure.annotations.InputAdapter;
-import com.sa.accommodation_service.hotel.application.inputports.CreateHotel;
-import com.sa.accommodation_service.hotel.application.inputports.GetAllHotels;
-import com.sa.accommodation_service.hotel.application.inputports.GetHotelById;
-import com.sa.accommodation_service.hotel.application.inputports.HotelActivation;
-import com.sa.accommodation_service.hotel.application.inputports.UpdateHotel;
+import com.sa.accommodation_service.hotel.application.inputports.createhotel.CreateHotel;
+import com.sa.accommodation_service.hotel.application.inputports.getallhotels.GetAllHotels;
+import com.sa.accommodation_service.hotel.application.inputports.gethotelbyid.GetHotelById;
+import com.sa.accommodation_service.hotel.application.inputports.updatehotel.UpdateHotel;
 import com.sa.accommodation_service.hotel.domain.Hotel;
 import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.CreateHotelRequestDTO;
 import com.sa.accommodation_service.hotel.infrastructure.inputadapters.rest.dto.CreateHotelResponseDTO;
@@ -36,12 +35,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RestController
 @InputAdapter
 public class HotelController {
-    
+
+    private final GetAllHotels getAllHotels;
+    private final GetHotelById getHotelById;
     private final CreateHotel createHotel;
     private final UpdateHotel updateHotel;
-    private final GetHotelById getHotelById;
-    private final GetAllHotels getAllHotels;
-    private final HotelActivation hotelActivation;
+
+    @GetMapping
+    public ResponseEntity<List<ShortHotelResponse>> getAll(HotelSearchRequestDTO hotelSearchRequestDTO) {
+        final List<ShortHotelResponse> hotels = getAllHotels
+                .getAll(hotelSearchRequestDTO.toHotelSearchDTO())
+                .stream()
+                .map(ShortHotelResponse::fromDomain)
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(hotels);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GetHotelByIdResponseDTO> getById(@PathVariable UUID id) {
+        final Hotel hotel = getHotelById.getById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(GetHotelByIdResponseDTO.fromDomain(hotel));
+    }
 
     @PostMapping
     public ResponseEntity<CreateHotelResponseDTO> create(
@@ -56,28 +70,6 @@ public class HotelController {
             @ModelAttribute UpdateHotelRequestDTO updateHotelRequestDTO) {
         final Hotel hotel = updateHotel.update(id, updateHotelRequestDTO.toUpdateHotelDTO());
         return ResponseEntity.status(HttpStatus.OK).body(UpdateHotelResponseDTO.fromDomain(hotel));
-    }    
-
-    @GetMapping("/{id}")
-    public ResponseEntity<GetHotelByIdResponseDTO> getById(@PathVariable UUID id) {
-        final Hotel hotel = getHotelById.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(GetHotelByIdResponseDTO.fromDomain(hotel));
     }
-
-    @GetMapping
-    public ResponseEntity<List<ShortHotelResponse>> getAll(HotelSearchRequestDTO hotelSearchRequestDTO) {
-        final List<ShortHotelResponse> hotels = getAllHotels.getAll(hotelSearchRequestDTO.toHotelSearchDTO())
-                .stream()
-                .map(ShortHotelResponse::fromDomain)
-                .toList();
-        return ResponseEntity.status(HttpStatus.OK).body(hotels);
-    }
-    
-    @PatchMapping("/activation/{id}")
-    public ResponseEntity<Void> toggle(@PathVariable UUID id) {
-        hotelActivation.toggle(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-    
 
 }

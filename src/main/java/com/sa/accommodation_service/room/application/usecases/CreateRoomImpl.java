@@ -5,12 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.sa.accommodation_service.common.application.annotations.UseCase;
-import com.sa.accommodation_service.common.application.outputports.cloud.UploadImage;
+import com.sa.accommodation_service.common.application.outputports.cloud.UploadFile;
 import com.sa.accommodation_service.common.infrastructure.exceptions.EntityNotFoundException;
 import com.sa.accommodation_service.hotel.application.outputports.persistence.FindHotelById;
 import com.sa.accommodation_service.hotel.domain.Hotel;
-import com.sa.accommodation_service.room.application.dto.CreateRoomDTO;
-import com.sa.accommodation_service.room.application.inputports.CreateRoom;
+import com.sa.accommodation_service.room.application.inputports.createroom.CreateRoom;
+import com.sa.accommodation_service.room.application.inputports.createroom.dto.CreateRoomDTO;
 import com.sa.accommodation_service.room.application.ouputports.persistence.SaveRoom;
 import com.sa.accommodation_service.room.domain.Room;
 
@@ -25,7 +25,7 @@ public class CreateRoomImpl implements CreateRoom {
 
     private final FindHotelById findHotelById;
     private final SaveRoom saveRoom;
-    private final UploadImage uploadImage;
+    private final UploadFile uploadImage;
     
     @Override
     @Transactional
@@ -33,8 +33,15 @@ public class CreateRoomImpl implements CreateRoom {
         final Hotel hotel = findHotelById.findById(createRoomDTO.hotelId())
                 .orElseThrow(() -> new EntityNotFoundException("No existe un hotel con el id: "
                         + createRoomDTO.hotelId()));
-        final String fileName = uploadImage.upload(createRoomDTO.photo());
-        return saveRoom.save(createRoomDTO.toDomain(hotel, fileName));
+        uploadImage.upload(createRoomDTO.photo());
+        final Room room = new Room(
+                hotel,
+                createRoomDTO.roomNumber(),
+                createRoomDTO.description(),
+                createRoomDTO.pricePerNight(),
+                createRoomDTO.maintenanceCost(),
+                createRoomDTO.photo().fileName());
+        return saveRoom.save(room);
     }
 
 }
