@@ -10,8 +10,7 @@ public record ShortRoomResponse(
     UUID id,
     String roomNumber,
     BigDecimal pricePerNight,
-    String photo,
-    Boolean available
+    String photo
 
 ) {
 
@@ -20,8 +19,7 @@ public record ShortRoomResponse(
                 room.getId().value(),
                 room.getRoomNumber().value(),
                 room.getPricePerNight().value(),
-                room.getPhoto(),
-                room.isAvailable());
+                room.getPhoto());
     }
     
 }

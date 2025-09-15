@@ -15,7 +15,6 @@ public record GetRoomByIdResponseDTO(
     BigDecimal pricePerNight,
     BigDecimal maintenanceCost,
     String photo,
-    boolean available,
     boolean active
 
 ) {
@@ -29,7 +28,6 @@ public record GetRoomByIdResponseDTO(
                 room.getPricePerNight().value(),
                 room.getMaintenanceCost().value(),
                 room.getPhoto(),
-                room.isAvailable(),
                 room.isActive());
     }
     

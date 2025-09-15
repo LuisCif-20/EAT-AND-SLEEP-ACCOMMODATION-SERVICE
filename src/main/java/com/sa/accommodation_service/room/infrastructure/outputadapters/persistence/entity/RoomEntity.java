@@ -39,9 +39,6 @@ public class RoomEntity {
     private String photo;
     
     @Column
-    private Boolean available;
-
-    @Column
     private Boolean active;
 
     @ManyToOne

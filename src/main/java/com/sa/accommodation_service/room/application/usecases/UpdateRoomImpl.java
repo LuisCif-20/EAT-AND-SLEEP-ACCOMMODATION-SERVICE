@@ -64,7 +64,6 @@ public class UpdateRoomImpl implements UpdateRoom {
                 resolveValue(updateRoomDTO.description(), room.getDescription()),
                 resolveValue(updateRoomDTO.pricePerNight(), room.getPricePerNight().value()),
                 resolveValue(updateRoomDTO.maintenanceCost(), room.getMaintenanceCost().value()),
-                room.isAvailable(),
                 resolveValue(updateRoomDTO.active(), room.isActive()), 
                 photo);
     }
